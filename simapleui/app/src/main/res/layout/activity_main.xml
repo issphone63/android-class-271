@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         android:id="@+id/textView1"
-        android:textSize="50dp" />
+        android:textSize="20dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -22,10 +22,9 @@
         android:text="Submit"
         android:id="@+id/submit"
         android:onClick="submit"
-        android:layout_below="@+id/radioGroup"
+        android:layout_below="@+id/spinner"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/button" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="match_parent"
@@ -48,18 +47,41 @@
         <RadioButton
             android:layout_width="111dp"
             android:layout_height="wrap_content"
-            android:id="@+id/maleradioButton"
+            android:id="@+id/blacktearadioButton"
             android:checked="true"
-            android:drawableRight="@drawable/m"/>
+            android:text="Black Tea" />
 
 
 
         <RadioButton
             android:layout_width="111dp"
             android:layout_height="match_parent"
-            android:id="@+id/femaleradioButton"
+            android:id="@+id/greantearadioButton"
             android:checked="false"
-            android:drawableRight="@drawable/f" />
+            android:text="Grean Tea" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/milktearadioButton"
+            android:checked="false"
+            android:text="Milk Tea" />
     </RadioGroup>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/submit" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
