@@ -1,8 +1,10 @@
 package tw.com.a_team.simapleui;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    final static int REQUEST_CODE_DRICK_MENU_ACTIVITY = 0;
 
     TextView textView;
     EditText editText;
@@ -66,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Order order=(Order)parent.getAdapter().getItem(position);
+                Order order = (Order) parent.getAdapter().getItem(position);
                 //Toast.makeText(MainActivity.this,"You click on "+order.note,Toast.LENGTH_SHORT).show();
-                Snackbar.make(parent,"You click on "+order.note,Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+                Snackbar.make(parent, "You click on " + order.note, Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -80,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
 
         setupListView();
         setupSpinner();
+
+        Log.d("debug", "MainActivity OnCreate");
+
     }
+
+
 
     public void submit(View view)
     {
@@ -98,6 +107,67 @@ public class MainActivity extends AppCompatActivity {
         orders.add(order);
         setupListView();
     }
+
+    public void goToMenu(View v)
+    {
+        Intent intent=new Intent();
+        intent.setClass(this,DrinkMainActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_DRICK_MENU_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DRICK_MENU_ACTIVITY)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                Toast.makeText(this,"Done",Toast.LENGTH_LONG).show();
+            }
+            if(resultCode == RESULT_CANCELED)
+            {
+                Toast.makeText(this,"取消菜單",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("debug", "MainActivity onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("debug", "MainActivity onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("debug", "MainActivity onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("debug", "MainActivity onStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("debug", "MainActivity onRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("debug", "MainActivity onDestroy");
+    }
+
+
 
     private void setupListView()
     {
@@ -117,5 +187,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter adapter=new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item,data);
         spinner.setAdapter(adapter);
     }
+
+
 
 }
