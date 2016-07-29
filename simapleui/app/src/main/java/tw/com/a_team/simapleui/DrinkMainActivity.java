@@ -1,5 +1,7 @@
 package tw.com.a_team.simapleui;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +16,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrinkMainActivity extends AppCompatActivity {
+public class DrinkMainActivity extends AppCompatActivity implements DrinkOrderDialog.OnDrinkOrderListener {
 
     ListView drinkMenuListView;
     TextView totalTextView;
@@ -65,11 +67,28 @@ public class DrinkMainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Drink drink=(Drink)parent.getAdapter().getItem(position);
-                drinkOderList.add(drink);
+                //drinkOderList.add(drink);
+                showDrinkOrderDialog(drink);
                 setupTotalTextView();
 
             }
         });
+    }
+
+    private void showDrinkOrderDialog(Drink drink)
+    {
+        FragmentManager fragmentManager=getFragmentManager();
+
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        DrinkOrderDialog dialog = DrinkOrderDialog.newInstance(drink);
+
+        //ft.replace(R.id.root, dialog);
+        //ft.commit();
+
+        dialog.show(ft,"DrinkOrderDialog");
+
+
     }
 
     public void setupTotalTextView()
@@ -134,6 +153,8 @@ public class DrinkMainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void OnDrinkOrderFinished() {
 
-
+    }
 }
