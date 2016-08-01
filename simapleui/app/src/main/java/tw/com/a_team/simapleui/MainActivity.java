@@ -1,6 +1,8 @@
 package tw.com.a_team.simapleui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
     String drink="Black Tea";
     List<Order> orders=new ArrayList<>();
+    ArrayList<DrinkOrder> drinkOrders= new ArrayList<>();
 
-
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
         radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
         listView=(ListView)findViewById(R.id.listView);
         spinner=(Spinner)findViewById(R.id.spinner);
+
+        sharedPreferences = getSharedPreferences("UIState", Context.MODE_PRIVATE) ;
+        editor = sharedPreferences.edit();
+
+
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -59,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                editor.putString("editText", editText.getText().toString());
+                editor.apply();
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     submit(v);
                     return true; //這樣可以清除 Enter 字元
@@ -82,8 +93,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editor.putInt("spinner_pos", position);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         setupListView();
         setupSpinner();
+
+        restoreStatus();
 
         Log.d("debug", "MainActivity OnCreate");
 
@@ -94,24 +120,27 @@ public class MainActivity extends AppCompatActivity {
     public void submit(View view)
     {
         String text=editText.getText().toString();
-        String result =text+" order: "+drink;
+        String result =text;//+" order: "+drink;
         textView.setText(text);
         editText.setText("");
 
         //orders.add(text);
         Order order=new Order();
         order.note=text;
-        order.drink=drink;
+        order.drinkOrders=drinkOrders;
         order.storeInfo=(String)spinner.getSelectedItem();
 
         orders.add(order);
+
+        drinkOrders = new ArrayList<>();
         setupListView();
     }
 
     public void goToMenu(View v)
     {
         Intent intent=new Intent();
-        intent.setClass(this,DrinkMainActivity.class);
+        intent.setClass(this, DrinkMainActivity.class);
+        intent.putExtra("drinkOrderList",drinkOrders);
         startActivityForResult(intent, REQUEST_CODE_DRICK_MENU_ACTIVITY);
     }
 
@@ -122,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if(resultCode == RESULT_OK)
             {
+                drinkOrders= data.getParcelableArrayListExtra("results");
                 Toast.makeText(this,"Done",Toast.LENGTH_LONG).show();
             }
             if(resultCode == RESULT_CANCELED)
@@ -188,6 +218,10 @@ public class MainActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-
+    private void restoreStatus()
+    {
+        editText.setText(sharedPreferences.getString("editText" ,"") );
+        spinner.setSelection(sharedPreferences.getInt("spinner_pos", 0) );
+    }
 
 }
