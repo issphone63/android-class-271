@@ -20,6 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Order order = (Order) parent.getAdapter().getItem(position);
                 //Toast.makeText(MainActivity.this,"You click on "+order.note,Toast.LENGTH_SHORT).show();
-                Snackbar.make(parent, "You click on " + order.note, Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+                Snackbar.make(parent, "You click on " + order.getNote(), Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -106,10 +115,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //setupOrderHistory();
         setupListView();
         setupSpinner();
 
         restoreStatus();
+/*
+        ParseObject parseObject= new ParseObject("TestObject");
+        parseObject.put("foo", "bar-issue");
+        parseObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null)
+                    Toast.makeText(MainActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                else
+                    e.printStackTrace();
+                Toast.makeText(MainActivity.this, "false", Toast.LENGTH_SHORT).show();
+            }
+        });
+*/
+ /*       ParseQuery<ParseObject> query= new ParseQuery<ParseObject>("TestObject");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                for (ParseObject parseObject1 : objects)
+                {
+                    Toast.makeText(MainActivity.this, parseObject1.getString("foo"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
 
         Log.d("debug", "MainActivity OnCreate");
 
@@ -126,11 +160,15 @@ public class MainActivity extends AppCompatActivity {
 
         //orders.add(text);
         Order order=new Order();
-        order.note=text;
-        order.drinkOrders=drinkOrders;
-        order.storeInfo=(String)spinner.getSelectedItem();
+        order.setNote(text);
+        order.setDrinkOrders(drinkOrders);
+        order.setStoreInfo((String)spinner.getSelectedItem());
 
         orders.add(order);
+
+        Gson gson= new Gson();
+        String orderData= gson.toJson(order);
+        Utils.writeFile(this, "history", orderData + "\n");
 
         drinkOrders = new ArrayList<>();
         setupListView();
@@ -197,7 +235,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d("debug", "MainActivity onDestroy");
     }
 
+    private void setupOrderHistory()
+    {
+        String orderDatas= Utils.readFile(this, "history");
+        String[] orderData= orderDatas.split("\n");
+        Gson gson= new Gson();
 
+        for (String data : orderData)
+        {
+            try {
+                Order order= gson.fromJson(data, Order.class);
+                if (order != null)
+                    orders.add(order);
+            }
+            catch (JsonSyntaxException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     private void setupListView()
     {
