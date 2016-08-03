@@ -20,9 +20,9 @@ public class DrinkAdapter extends BaseAdapter {
     List<Drink> drinks;
     LayoutInflater inflater;
 
-    public DrinkAdapter(Context context,List<Drink> drinksList)
+    public DrinkAdapter(Context context,List<Drink> drinks)
     {
-        this.drinks=drinksList;
+        this.drinks=drinks;
         this.inflater=LayoutInflater.from(context);
 
     }
