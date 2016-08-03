@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 
-        Order.getQuery().findInBackground(new FindCallback<Order>() {
+        Order.getOrdersFromLocalThenRemote(new FindCallback<Order>() {
             @Override
             public void done(List<Order> objects, ParseException e) {
                 if ( e == null)
