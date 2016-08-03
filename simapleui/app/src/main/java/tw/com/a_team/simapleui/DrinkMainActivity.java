@@ -63,16 +63,29 @@ public class DrinkMainActivity extends AppCompatActivity implements DrinkOrderDi
 //            drinkList.add(drink);
 //        }
 
-        Drink.getQuery().findInBackground(new FindCallback<Drink>() {
-            @Override
-            public void done(List<Drink> objects, ParseException e) {
-                if (e == null)
-                {
-                    drinkList= objects;
-                    setupDrinkMenuListView();
-                }
-            }
+        Drink.getDrinkFromLocalThenRemote(new FindCallback<Drink>() {
+              @Override
+              public void done(List<Drink> objects, ParseException e) {
+                  if ( e == null)
+                  {
+                      drinkList = objects;
+                      setupDrinkMenuListView();
+                  }
+
+              }
+
         });
+
+
+//                Drink.getQuery().findInBackground(new FindCallback<Drink>() {
+//                    @Override
+//                    public void done(List<Drink> objects, ParseException e) {
+//                        if (e == null) {
+//                            drinkList = objects;
+//                            setupDrinkMenuListView();
+//                        }
+//                    }
+//                });
 
     }
 
