@@ -91,13 +91,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Order order = (Order) parent.getAdapter().getItem(position);
-                //Toast.makeText(MainActivity.this,"You click on "+order.note,Toast.LENGTH_SHORT).show();
-                Snackbar.make(parent, "You click on " + order.getNote(), Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                    }
-                }).show();
+                goToOrderDetail(order);
+                //Toast.makeText(MainActivity.this,"You click on "+order.note,Toast.LENGTH_SHORT).show();
+//                Snackbar.make(parent, "You click on " + order.getNote(), Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                }).show();
 
             }
         });
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         Order order=new Order();
         order.setNote(text);
         order.setDrinkOrders(drinkOrders);
-        order.setStoreInfo((String)spinner.getSelectedItem());
+        order.setStoreInfo((String) spinner.getSelectedItem());
 
         orders.add(order);
 
@@ -183,6 +185,14 @@ public class MainActivity extends AppCompatActivity {
         intent.setClass(this, DrinkMainActivity.class);
         intent.putExtra("drinkOrderList",drinkOrders);
         startActivityForResult(intent, REQUEST_CODE_DRICK_MENU_ACTIVITY);
+    }
+
+    public  void goToOrderDetail(Order order)
+    {
+        Intent intent=new Intent();
+        intent.setClass(this, OrderDetailActivity.class);
+        intent.putExtra("order",order);
+        startActivity(intent);
     }
 
     @Override
@@ -294,5 +304,7 @@ public class MainActivity extends AppCompatActivity {
         editText.setText(sharedPreferences.getString("editText" ,"") );
         spinner.setSelection(sharedPreferences.getInt("spinner_pos", 0) );
     }
+
+
 
 }
