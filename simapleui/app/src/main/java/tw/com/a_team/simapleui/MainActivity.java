@@ -3,6 +3,7 @@ package tw.com.a_team.simapleui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.internal.Streams;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -30,7 +32,10 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     String drink="Black Tea";
     List<Order> orders=new ArrayList<>();
     ArrayList<DrinkOrder> drinkOrders= new ArrayList<>();
+
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -62,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("UIState", Context.MODE_PRIVATE) ;
         editor = sharedPreferences.edit();
-
 
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -292,10 +297,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupSpinner()
     {
-        String[] data=getResources().getStringArray(R.array.storeinfos);
 
-        //ArrayAdapter adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,data);
+        List<ParseObject> ob;
+        List<String> dataList = new ArrayList<>();
+
+        ParseQuery parseQuery = new ParseQuery("storeinfos");
+        try {
+            ob = parseQuery.find();
+
+            for (ParseObject groups : ob) {
+                dataList.add(groups.getString("name") + "," + groups.getString("address"));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String data[] = (String[]) dataList.toArray(new String[0]);
+
+
         ArrayAdapter adapter=new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item,data);
+
         spinner.setAdapter(adapter);
     }
 

@@ -99,6 +99,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             double[] latlng = Utils.getLatLngFromAddress(params[0]);
             if (latlng != null)
             {
+                Log.e("getLatLngFromAddress","OK" );
                 return Utils.getStaticMapFromLatLng(latlng);
             }
             return null;
@@ -112,6 +113,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             {
                 if (imageViewWeakReference.get() !=  null)
                 {
+                    Log.e("setImageBitmap","OK" );
                     ImageView imageView = imageViewWeakReference.get();
                     imageView.setImageBitmap(bitmap);
                 }

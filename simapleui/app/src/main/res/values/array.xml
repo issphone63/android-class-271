@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="storeinfos">
-        <item>NTU store</item>
-        <item>Ximen store</item>
-        <item>NCCU store</item>
-        <item>NCU store</item>
-        <item>NTUT store</item>
+        <item>建成店</item>
+        <item>大稻埕店</item>
+        <item>士林店</item>
+        <item>天母店</item>
+        <item>劍潭店</item>
 
 
     </string-array>

@@ -126,9 +126,11 @@ public class Utils {
         String apiUrl = "http://map.google.com/maps/api/staticmap?center=" + center + "&size=640x480&zoom=17";
         byte[] data = Utils.urlToBytes(apiUrl);
 
-        if (data != null)
+        if (data == null) {
             return null;
+        }
 
+        Log.e("getStaticMapFromLatLng", String.valueOf(data.length));
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
